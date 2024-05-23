@@ -1,0 +1,59 @@
+[Version]
+signature="$CHICAGO$"
+[DefaultInstall]
+CopyFiles = Scheme.Cur, Scheme.Txt
+AddReg= Scheme.Reg
+[DestinationDirs]
+Scheme.Cur = 10,"%CUR_DIR%"
+Scheme.Txt = 10,"%CUR_DIR%"
+[Scheme.Reg]
+HKCU,"Control Panel\Cursors\Schemes","%scheme_name%",,"%10%\%CUR_DIR%\%arrow%,%10%\%CUR_DIR%\%help%,%10%\%CUR_DIR%\%start%,%10%\%CUR_DIR%\%wait%,%10%\%CUR_DIR%\%cross%,%10%\%CUR_DIR%\%beam%,%10%\%CUR_DIR%\%pen%,%10%\%CUR_DIR%\%no%,%10%\%CUR_DIR%\%vert%,%10%\%CUR_DIR%\%hori%,%10%\%CUR_DIR%\%dgn1%,%10%\%CUR_DIR%\%dgn2%,%10%\%CUR_DIR%\%move%,%10%\%CUR_DIR%\%select%,%10%\%CUR_DIR%\%link%,%10%\%CUR_DIR%\%pin%,%10%\%CUR_DIR%\%person%"
+[Strings]
+CUR_DIR		= "Cursors\Groovy"
+SCHEME_NAME	= "(Groovy)"
+arrow		= "arrow.cur"
+help		= "help.cur"
+start		= "start.ani"
+wait		= "wait.ani"
+cross		= "cross.cur"
+beam		= "text.cur"
+pen			= "pen.cur"
+no			= "no.cur"
+pen			= "pen.cur"
+vert		= "vert.cur"
+hori		= "hori.cur"
+dgn1		= "diag1.cur"
+dgn2		= "diag2.cur"
+move		= "move.cur"
+select		= "link.cur"
+link		= "hand.cur"
+person		= "person.cur"
+pin			= "pin.cur"
+[Scheme.Cur]
+start.ani
+wait.ani
+arrow.cur
+cross.cur
+diag1.cur
+diag2.cur
+hand-link.cur
+hand-link1.cur
+hand-move.cur
+hand-move1.cur
+hand.cur
+hand1.cur
+help.cur
+hori.cur
+link.cur
+move.cur
+move1.cur
+no.cur
+no1.cur
+pen.cur
+pen1.cur
+person.cur
+pin.cur
+skull.cur
+text.cur
+text1.cur
+vert.cur

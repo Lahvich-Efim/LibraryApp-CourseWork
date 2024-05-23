@@ -1,0 +1,40 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+                    xmlns:local="clr-namespace:LibraryApp" 
+                    xmlns:system="clr-namespace:System;assembly=netstandard">
+    <local:DateCollection x:Key="m_Month">
+        <system:String>january</system:String>
+        <system:String>february</system:String>
+        <system:String>march</system:String>
+        <system:String>april</system:String>
+        <system:String>may</system:String>
+        <system:String>june</system:String>
+        <system:String>july</system:String>
+        <system:String>august</system:String>
+        <system:String>september</system:String>
+        <system:String>october</system:String>
+        <system:String>november</system:String>
+        <system:String>december</system:String>
+    </local:DateCollection>
+    <!--For the User Page-->
+    <system:String x:Key="Cart">Cart</system:String>
+    <system:String x:Key="OrderHistory">Order History</system:String>
+    <system:String x:Key="PersonalLibrary">Personal Library</system:String>
+    <system:String x:Key="OrderDetails">Order Details № {0}</system:String>
+    <system:String x:Key="Notification">Notification</system:String>
+    <system:String x:Key="Profile">Profile</system:String>
+    <system:String x:Key="FirstName">First Name</system:String>
+    <system:String x:Key="LastName">Last Name</system:String>
+    <system:String x:Key="MiddleName">Middle Name</system:String>
+    <system:String x:Key="Address">Address</system:String>
+    <system:String x:Key="Email">Email</system:String>
+    <system:String x:Key="Phone">Phone</system:String>
+    <system:String x:Key="RegistrationDate">Registration Date</system:String>
+    <system:String x:Key="EditProfile">Edit Profile</system:String>
+    <system:String x:Key="ThemeAndLanguageSettings">Theme and Language Settings</system:String>
+    <system:String x:Key="ThemeColor">Theme Color:</system:String>
+    <system:String x:Key="Languages">Languages:</system:String>
+    <system:String x:Key="ThemeMode">Theme Mode:</system:String>
+    <system:String x:Key="Confirm">Confirm</system:String>
+    <system:String x:Key="NotifyMode">Notify Mode:</system:String>
+</ResourceDictionary>

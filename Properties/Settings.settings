@@ -1,0 +1,21 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="LibraryApp.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="EmailPwd" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">wnmt snlr cixa esev</Value>
+    </Setting>
+    <Setting Name="EmailSource" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">libraryapp228@gmail.com</Value>
+    </Setting>
+    <Setting Name="SMSAuth" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">AC692afa11b18746b71a60fa225dbbcf98</Value>
+    </Setting>
+    <Setting Name="SMSToken" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">31e3cfb8ac59d09e32203afcb44f8018</Value>
+    </Setting>
+    <Setting Name="SMSNumber" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">+17065842564</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

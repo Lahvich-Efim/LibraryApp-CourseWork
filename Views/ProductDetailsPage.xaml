@@ -1,0 +1,221 @@
+﻿<Page x:Class="LibraryApp.ProductDetailsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:LibraryApp"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:uc="clr-namespace:LibraryApp.UseControls"
+      mc:Ignorable="d" d:DesignWidth="1400"
+      Title="ProductPage">
+    <Page.Resources>
+        <local:ImageToTextConverter x:Key="ITTConverter"/>
+        <local:DateToStringConverter x:Key="DTSConverter"/>
+        <local:VisibilityConverter x:Key="BTVConverter"/>
+        <local:VisibilityToHiddenConverter x:Key="BTVHConverter"/>
+    </Page.Resources>
+    <ScrollViewer x:Name="scrollBarViewer" Margin="10">
+        <Grid MaxWidth="1400">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid Margin="30 50" Width="400" Grid.Column="0" Grid.RowSpan="2">
+                <Image x:Name="ImageProduct" Source="{Binding ImageSource}"/>
+                <Grid VerticalAlignment="Bottom">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <ItemsControl ItemsSource="{Binding ListDefault}" Grid.Column="0">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <RadioButton GroupName="groupFoo" Style="{StaticResource {x:Type ToggleButton}}"
+                                             IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=Explicit}"
+                                             local:AttachedProperties.Name="{Binding CollectionId, StringFormat='coll{0}'}"
+                                             Command="{Binding Path=DataContext.ChangeSelectedCollectionCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                             CommandParameter="{Binding Name, RelativeSource={RelativeSource Self}}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon Margin="3">    
+                                            <materialDesign:PackIcon.Resources>
+                                                <Style TargetType="materialDesign:PackIcon">
+                                                    <Setter Property="Kind" Value="{Binding Icon}"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=RadioButton}}" Value="True">
+                                                            <Setter Property="Kind" Value="Tick"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </materialDesign:PackIcon.Resources>
+                                        </materialDesign:PackIcon>
+                                        <TextBlock Text="{Binding Name}" VerticalAlignment="Center" Margin="2"/>
+                                    </StackPanel>
+                                </RadioButton>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                    <ComboBox Grid.Column="1" ItemsSource="{Binding ListState}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <RadioButton GroupName="groupFoo" Style="{StaticResource {x:Type ToggleButton}}" 
+                                             IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=Explicit}"
+                                             local:AttachedProperties.Name="{Binding CollectionId, StringFormat='coll{0}'}"
+                                             Command="{Binding Path=DataContext.ChangeSelectedCollectionCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                             CommandParameter="{Binding Name, RelativeSource={RelativeSource Self}}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon Kind="Tick" Visibility="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=RadioButton}, Converter={StaticResource BTVHConverter}}"/>
+                                        <TextBlock Text="{Binding Name}" VerticalAlignment="Center"  Margin="2"/>
+                                    </StackPanel>
+                                </RadioButton>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </Grid>
+            </Grid>
+            <Button Grid.Column="1" Grid.Row="1" FontSize="20" Margin="20" Padding="40 0" 
+                    Height="50" HorizontalAlignment="Left" Command="{Binding ChangeBasketCommand}">
+                <Button.Resources>
+                    <Style TargetType="Button">
+                        <Setter Property="Content"  Value="Положить в корзину"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding DataContext.InCart, RelativeSource={RelativeSource AncestorType=Page}}" Value="True">
+                                <Setter Property="Content" Value="Отложить из корзины"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Resources>
+            </Button>
+            <StackPanel Margin="20"  Grid.Column="1" Grid.Row="0" Orientation="Vertical">
+                <TextBlock Text="{Binding Name}"  FontSize="24" FontWeight="Bold"/>
+                <TextBlock Text="{Binding Author}" FontSize="18" FontWeight="DemiBold"/>
+                <StackPanel Orientation="Horizontal" Margin="0 10">
+                    <Path
+                          Data="M19.8488 6.5967C19.8076 6.4405 19.7252 6.3169 19.6015 6.2258 19.4779 6.1348 19.3267 6.0632 19.1481 6.0111L13.5219 5.2695 10.9663.4489C10.8427.1496 10.5816 0 10.1832 0 9.7848 0 9.5237.1496 9.4001.4489L6.8445 5.1914 1.3007 6.0111C1.1221 6.0111.9676 6.0697.837 6.1868.7065 6.3039.6 6.4405.5176 6.5967.4626 6.7658.4592 6.9284.5073 7.0846.5554 7.2407.6413 7.3578.7649 7.4359L4.8249 11.1831 3.8563 16.5112C3.815 16.6803 3.8288 16.8397 3.8975 16.9893 3.9662 17.1389 4.0692 17.2593 4.2066 17.3504 4.3303 17.4284 4.478 17.4805 4.6497 17.5065 4.8214 17.5325 4.9966 17.5065 5.1752 17.4284L10.1832 14.9303 15.1912 17.4284C15.2874 17.4284 15.3629 17.4284 15.4179 17.4284 15.4728 17.4284 15.5484 17.4284 15.6446 17.4284 15.727 17.4284 15.8129 17.4122 15.9022 17.3796 15.9915 17.3471 16.0774 17.3048 16.1598 17.2528 16.2972 17.1747 16.4002 17.0609 16.4689 16.9112 16.5376 16.7616 16.5514 16.6022 16.5102 16.4331L15.5415 11.105 19.6015 7.3578C19.7252 7.2667 19.811 7.1496 19.8591 7.0065 19.9072 6.8634 19.9038 6.7268 19.8488 6.5967Z" 
+                          Fill="Yellow" Stroke="Gray"
+                          StrokeThickness="1" Stretch="UniformToFill" Width="24"/>
+                    <TextBlock VerticalAlignment="Center" Margin="10 0 0 0" FontSize="16" Text="{Binding RatingBook}"/>
+                    <TextBlock VerticalAlignment="Center" Margin="10 0 0 0" FontSize="12" Text="{Binding RatingBook, StringFormat='({0} отзыв)'}"/>
+                </StackPanel>
+
+
+                <TextBlock Margin="0 20" Text="{Binding Description}" FontSize="18" TextWrapping="Wrap" Width="Auto"/>
+            </StackPanel>
+            <TextBlock Text="Характеристики" FontWeight="Bold" FontSize="24" Grid.Row="2"  Grid.ColumnSpan="2"/>
+            <StackPanel Margin="30 50 0 50" Grid.Row="2"  Grid.Column="0">
+                <TextBlock Text="Тип изданий" Style="{DynamicResource TextSpecificStyle}"/>
+                <TextBlock Text="Год" Style="{DynamicResource TextSpecificStyle}"/>
+                <TextBlock Text="Издательство" Style="{DynamicResource TextSpecificStyle}"/>
+                <TextBlock Text="Количество страниц" Style="{DynamicResource TextSpecificStyle}"/>
+                <TextBlock Text="Количество книг" Style="{DynamicResource TextSpecificStyle}"/>
+                <ItemsControl ItemsSource="{Binding Specification, Mode=OneWay}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=Key}" Style="{DynamicResource TextSpecificStyle}"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+            <StackPanel Margin="0 50 30 50" Grid.Row="2"  Grid.Column="1">
+                <TextBlock Text="{Binding TypeBook}" Style="{DynamicResource TextCharactereStyle}"/>
+                <TextBlock Text="{Binding Year}" Style="{DynamicResource TextCharactereStyle}"/>
+                <TextBlock Text="{Binding Publisher}" Style="{DynamicResource TextCharactereStyle}"/>
+                <TextBlock Text="{Binding NumberPages}" Style="{DynamicResource TextCharactereStyle}"/>
+                <TextBlock Text="{Binding Quantity}" Style="{DynamicResource TextCharactereStyle}"/>
+                <ItemsControl ItemsSource="{Binding Specification, Mode=OneWay}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=Value}" Style="{DynamicResource TextCharactereStyle}"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel >
+            <TextBlock Text="Отзывы" FontWeight="Bold" FontSize="24" Grid.Row="3"  Grid.ColumnSpan="2"/>
+            <Button Content="Добавить отзыв" Grid.Row="3"  Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="14" Padding="20 4" Margin="4"
+                    Visibility="{Binding ButtonReview, Converter={StaticResource BTVConverter}}" Command="{Binding AddRewiewCommand}"/>
+
+            <StackPanel  Grid.Row="3"  Grid.ColumnSpan="2" Margin="30 50">
+                <Border MaxWidth="800" Visibility="{Binding isReview, Converter={StaticResource BTVConverter}}">
+                    <StackPanel>
+                        <TextBlock Text="Ваша оценка:" FontSize="16" Margin="0 0 0 10"/>
+                        <uc:ViewRaitingControl Height="14" BackgroundStar="LightGray" BorderColorStar="Gray" StarThikness="1" Value="{Binding RatingUser, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="True" Margin="20 0 0 10"/>
+                        <TextBlock Text="Коментария" FontSize="16" Margin="0 10 0 10"/>
+                        <TextBox Text="{Binding Comment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="100" Margin="20 0" TextWrapping="Wrap"/>
+                        <Button Content="Отправить" Grid.Row="2"  Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="14" Padding="20 4" Margin="4"
+                                    Command="{Binding SendReviewCommand}"/>
+                        <TextBlock Text="Оставьте хотя бы оценку!" Foreground="#FFC80000" Visibility="{Binding isErrorReview, Converter={StaticResource BTVConverter}}" HorizontalAlignment="Center" Grid.Row="2"  Grid.Column="0" Margin="0 0 0 -16"/>
+                    </StackPanel>
+                </Border>
+
+                <ContentPresenter Content="{Binding}">
+                    <ContentPresenter.Resources>
+                        <DataTemplate x:Key="EmptyReviewListTemplate">
+                            <TextBlock Text="Никто не оставил комментарий! Будьте первым" FontSize="16" HorizontalAlignment="Center" Margin="30"/>
+                        </DataTemplate>
+                        <DataTemplate x:Key="ReviewListTemplate">
+                            <ItemsControl ItemsSource="{Binding Reviews, Mode=TwoWay, UpdateSourceTrigger=Explicit}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Width="1000" Margin="10">
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition/>
+                                                    <RowDefinition/>
+                                                    <RowDefinition/>
+                                                </Grid.RowDefinitions>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition/>
+                                                </Grid.ColumnDefinitions>
+                                                <Border Background="LightGray" Grid.Column="0" Grid.RowSpan="2"
+                                                        Width="55" Height="55" CornerRadius="40" Margin="5">
+                                                    <ContentControl>
+                                                        <ContentControl.Content>
+                                                            <MultiBinding Converter="{StaticResource ITTConverter}">
+                                                                <Binding Path="User.Pavatar"/>
+                                                                <Binding Path="User.Username"/>
+                                                                <Binding Path="Width" RelativeSource="{RelativeSource AncestorType=Border}" />
+                                                                <Binding Path="BorderThickness" RelativeSource="{RelativeSource AncestorType=Border}" />
+                                                            </MultiBinding>
+                                                        </ContentControl.Content>
+                                                    </ContentControl>
+                                                </Border>
+                                                <TextBlock  Text="{Binding User.Username}" Margin="10 10 10 0" VerticalAlignment="Center" FontSize="18" FontWeight="DemiBold" Grid.Column="1" Grid.Row="0"/>
+                                                <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1" Margin="10 5 10 10">
+                                                    <uc:ViewRaitingControl Height="14" BackgroundStar="LightGray" BorderColorStar="Gray" StarThikness="1" Value="{Binding Rating}" IsEnabled="False" />
+                                                    <TextBlock Margin="10 0" Text="{Binding ReviewDate, Converter={StaticResource DTSConverter}}" VerticalAlignment="Center" FontSize="13"/>
+                                                </StackPanel>
+                                                <TextBlock TextWrapping="Wrap" FontSize="16" Margin="10" Text="{Binding Comment}" Grid.ColumnSpan="2" Grid.Row="2"/>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </DataTemplate>
+                    </ContentPresenter.Resources>
+                    <ContentPresenter.Style>
+                        <Style TargetType="ContentPresenter">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding HasReviews, UpdateSourceTrigger=PropertyChanged}" Value="False">
+                                    <Setter Property="ContentTemplate" Value="{StaticResource EmptyReviewListTemplate}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                            <Setter Property="ContentTemplate" Value="{StaticResource ReviewListTemplate}" />
+                        </Style>
+                    </ContentPresenter.Style>
+                </ContentPresenter>
+            </StackPanel>
+        </Grid>
+        
+    </ScrollViewer>
+</Page>

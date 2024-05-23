@@ -1,0 +1,54 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib"
+                    xmlns:local="clr-namespace:LibraryApp">
+    <local:DateCollection x:Key="m_Month">
+        <system:String>явнваря</system:String>
+        <system:String>февраля</system:String>
+        <system:String>марта</system:String>
+        <system:String>апреля</system:String>
+        <system:String>мая</system:String>
+        <system:String>июня</system:String>
+        <system:String>июля</system:String>
+        <system:String>августа</system:String>
+        <system:String>сентября</system:String>
+        <system:String>октября</system:String>
+        <system:String>ноября</system:String>
+        <system:String>декабря</system:String>
+    </local:DateCollection> 
+<!--Для страницы Пользователя-->
+    <system:String x:Key="Cart">Корзина</system:String>
+    <system:String x:Key="OrderHistory">История заказов</system:String>
+    <system:String x:Key="PersonalLibrary">Личная библиотека</system:String>
+    <system:String x:Key="OrderDetails">Детали заказа № {0}</system:String>
+    <system:String x:Key="Notification">Уведомление</system:String>
+    <system:String x:Key="Profile">Профиль</system:String>
+    <system:String x:Key="FirstName">Имя</system:String>
+    <system:String x:Key="LastName">Фамилия</system:String>
+    <system:String x:Key="MiddleName">Отчество</system:String>
+    <system:String x:Key="Address">Адрес</system:String>
+    <system:String x:Key="Email">Почта</system:String>
+    <system:String x:Key="Login">Логин</system:String>
+    <system:String x:Key="PasswordText">Пароль</system:String>
+    <system:String x:Key="Phone">Телефон</system:String>
+    <system:String x:Key="RegistrationDate">Дата регистрации</system:String>
+    <system:String x:Key="EditProfile">Изменить профиль</system:String>
+    <system:String x:Key="ThemeAndLanguageSettings">Настройка темы и языка</system:String>
+    <system:String x:Key="ThemeColor">Цвет темы:</system:String>
+    <system:String x:Key="Languages">Языки:</system:String>
+    <system:String x:Key="ThemeMode">Режим темы:</system:String>
+    <system:String x:Key="Confirm">Подтвердить</system:String>
+    <system:String x:Key="NotifyMode">Режим уведомлений:</system:String>
+
+
+    <!--Водяные знаки ошибка пользователя-->
+
+
+
+    <!--Остальное-->
+    <system:String x:Key="EnterCode">Код подтверждения почты был отправлен на ваш e-mail</system:String>
+    <system:String x:Key="ErrorVerificationCode">Код введен некоректно</system:String>
+    <system:String x:Key="EnterCodeSMS">Код подтверждения телефона был отправлен на sms введенного номера</system:String>
+    <system:String x:Key="ErrorSendEmail">Возможно, у вас отключен интернет или произошла непредвиденная ошибка</system:String>
+    <system:String x:Key="ErrorEmail">Произошла непредвиденная ошибка с почтой.</system:String>
+</ResourceDictionary>

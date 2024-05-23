@@ -1,0 +1,55 @@
+﻿<Window x:Class="LibraryApp.Views.AdminWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:local="clr-namespace:LibraryApp"
+        mc:Ignorable="d"
+        Title="AdminWindow" 
+        WindowState="Maximized">
+    <Window.Resources>
+        <local:ImageToTextConverter x:Key="ITTConventer"/>
+    </Window.Resources>
+    <Grid MaxWidth="1400">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Image Source="/image/Logo.png" VerticalAlignment="Bottom"/>
+        <StackPanel Grid.Row="1" VerticalAlignment="Center">
+            <Button Content="Каталог" Command="{Binding OpenCatalogPagesCommand}"/>
+            <Button Content="Доска заказа" Command="{Binding OpenOrderBoardCommand}"/>
+            <Button Content="Редактирование" Command="{Binding OpenEditContentProductCommand}"/>
+        </StackPanel>
+        <Button Command="{Binding CloseCommand}" Content="{materialDesign:PackIcon Kind=LogoutVariant}" Grid.Row="1"  HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="20"/>
+        <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
+
+            <TextBlock
+                VerticalAlignment="Center"
+                 Grid.Column="2">
+                <StackPanel Orientation="Horizontal">
+                    <Border Background="LightGray"
+                            Width="30" Height="30" CornerRadius="15">
+                        <ContentControl>
+                            <ContentControl.Content>
+                                <MultiBinding Converter="{StaticResource ITTConventer}">
+                                    <Binding Path="SourceImage" />
+                                    <Binding Path="Name" />
+                                    <Binding Path="Width" RelativeSource="{RelativeSource AncestorType=Border}" />
+                                    <Binding Path="BorderThickness" RelativeSource="{RelativeSource AncestorType=Border}" />
+                                </MultiBinding>
+                            </ContentControl.Content>
+                        </ContentControl>
+                    </Border>
+                    <TextBlock Margin="10 0 0 0"  Text="{Binding Name}" VerticalAlignment="Center"/>
+                </StackPanel>
+            </TextBlock>
+        </StackPanel>
+        <Frame x:Name="AdminFrame" NavigationUIVisibility="Hidden" Source="{Binding Page}" Grid.Column="1" Grid.RowSpan="2"/>
+    </Grid>
+</Window>

@@ -1,0 +1,23 @@
+﻿<Window x:Class="LibraryApp.Views.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        d:Width="1920" d:Height="1080"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LibraryApp" 
+        mc:Ignorable="d"
+        Title="LoginWindow"
+        WindowState="Maximized"
+        xmlns:notifications="clr-namespace:Notification.Wpf.Controls;assembly=Notification.Wpf"
+        
+        FontFamily="TT Norms Pro"
+        >
+    <!--WindowStyle="None"-->
+    <DockPanel>
+        <DockPanel.Background>
+            <ImageBrush ImageSource="/image/Login.png"/>
+        </DockPanel.Background>
+        <Frame x:Name="FormBox" Source="{Binding SourcePage}" NavigationUIVisibility="Hidden"/>
+    </DockPanel>
+</Window>

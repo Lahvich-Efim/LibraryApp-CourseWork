@@ -1,0 +1,354 @@
+﻿<Page x:Class="LibraryApp.Views.UserPage" Loaded="Page_Loaded"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:LibraryApp"
+      xmlns:uc="clr-namespace:LibraryApp.UseControls"
+      xmlns:model="clr-namespace:LibraryApp.Model"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      mc:Ignorable="d" MaxWidth="1400"
+      Title="UserPage" d:Height="1083" Width="1400">
+    <Page.Resources>
+        <local:VisibilityConverter x:Key="BTVConverter"/>
+        <local:ImageToTextConverter x:Key="ITTConverter"/>
+        <local:HiddenConverter x:Key="nBTVConverter"/>
+        <local:DateToStringConverter x:Key="DTSConverter"/>
+        <DataTemplate x:Key="CollectionTemplate">
+            <ItemsControl ItemsSource="{Binding Products, Mode=TwoWay}" >
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button>
+                            <StackPanel Margin="6">
+                                <Grid>
+                                    <Image Source="{Binding Image}" Stretch="UniformToFill" Width="160" Margin="0 0 0 10"/>
+                                    <Button Margin="5" HorizontalAlignment="Right" VerticalAlignment="Top" 
+                                            Width="25" Height="25" Content="{materialDesign:PackIcon Kind=Minus}"
+                                            Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type TabControl}}, Path=DataContext.DeleteInCollectionCommand}"
+                                            CommandParameter="{Binding Name, RelativeSource={RelativeSource Self}}">
+                                        <local:AttachedProperties.Name>
+                                            <MultiBinding StringFormat='btn{0}_{1}'>
+                                                <Binding Path="CollectionId"/>
+                                                <Binding Path="Id"/>
+                                            </MultiBinding>
+                                        </local:AttachedProperties.Name>
+                                    </Button>
+                                </Grid>
+                                <TextBlock Text="{Binding Name}" TextWrapping="Wrap" FontWeight="DemiBold"
+                                    TextTrimming="CharacterEllipsis" MaxHeight="40" Margin="0 2 0 0"/>
+                                <TextBlock Text="{Binding Author}" TextWrapping="Wrap"
+                                    TextTrimming="CharacterEllipsis" MaxHeight="20" Margin="0 2 0 0"/>
+                            </StackPanel>
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel x:Name="products"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </DataTemplate>
+        <DataTemplate x:Key="HeaderState">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding Name}" Visibility="{Binding EditCollection, Converter={StaticResource nBTVConverter}}"/>
+                <TextBox Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding EditCollection, Converter={StaticResource BTVConverter}}">
+                    <TextBox.InputBindings>
+                        <KeyBinding
+                            Key="Enter"
+                            Command="{Binding RelativeSource={RelativeSource AncestorType=TabControl}, Path=DataContext.EditNameCollectionCommand}"
+                            CommandParameter="{Binding Path=Text, RelativeSource={RelativeSource AncestorType={x:Type TextBox}}}"/>
+                        <KeyBinding
+                            Key="Esc"
+                            Command="{Binding RelativeSource={RelativeSource AncestorType=TabControl}, Path=DataContext.ExitEditCollectionCommand}"/>
+                    </TextBox.InputBindings>
+                </TextBox>
+                <Button Height="20" Width="20"  Margin="-2" Background="Transparent" BorderBrush="Transparent"
+                        Command="{Binding RelativeSource={RelativeSource AncestorType=TabControl}, Path=DataContext.EditCollectionCommand}"
+                        CommandParameter="{Binding Name, RelativeSource={RelativeSource Self}}" 
+                        local:AttachedProperties.Name="{Binding CollectionId, StringFormat='coll{0}'}"
+                        Visibility="{Binding EditCollection, Converter={StaticResource nBTVConverter}}">
+                    <materialDesign:PackIcon Kind="Pencil" Width="15"/>
+                </Button>
+                <Button Height="20" Width="20"  Margin="-2" Background="Transparent" BorderBrush="Transparent"
+                        Visibility="{Binding EditCollection, Converter={StaticResource BTVConverter}}"
+                        Command="{Binding RelativeSource={RelativeSource AncestorType=TabControl}, Path=DataContext.DeleteCollectionCommand}">
+                    <materialDesign:PackIcon Kind="Close" Width="15" />
+                </Button>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="HeaderDefault">
+            <StackPanel>
+                <TextBlock Text="{Binding Name}"/>
+            </StackPanel>
+        </DataTemplate>
+        <local:TabItemDataTemplateSelector x:Key="TemplateTabItemSelector" CollectionDefault="{StaticResource HeaderDefault}" 
+                                           CollectionState="{StaticResource HeaderState}"/>
+    </Page.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="75"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        
+        <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Vertical" VerticalAlignment="Top" Margin="20">
+            <Button Content="{DynamicResource OrderHistory}" Padding="15 10" Command="{Binding OpenHistoryOrderCommand}"/>
+            <Button Content="{DynamicResource Cart}" Padding="15 10"  Command="{Binding OpenCartCommand}"/>
+            <Button Content="{DynamicResource PersonalLibrary}" Padding="15 10"  Command="{Binding OpenLibraryCommand}"/>
+            <Button Content="{DynamicResource Profile}" Padding="15 10"  Command="{Binding OpenProfileCommand}"/>
+            <Button Content="{DynamicResource Notification}" Padding="15 10"  Command="{Binding OpenNotificationFeedCommand}"/>
+        </StackPanel>
+        <ScrollViewer Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" >
+            <Grid Margin="15">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <StackPanel Visibility="{Binding NotificationFeedVisibility, Converter={StaticResource BTVConverter}}">
+                    <TextBlock Text="Уведомление" FontSize="22" FontWeight="Bold"/>
+                    <ItemsControl ItemsSource="{Binding NotifyFeed}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Margin="15" BorderBrush="Gray" Padding="15" BorderThickness="1" >
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding Header}" FontSize="20" FontWeight="DemiBold" TextWrapping="Wrap"/>
+                                        <TextBlock Text="{Binding Message}" FontSize="16" Margin="0 10 0 0" TextWrapping="Wrap"/>
+                                        <TextBlock Text="{Binding DataNotify, Converter={StaticResource DTSConverter}}" HorizontalAlignment="Right" FontSize="12"/>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+                <StackPanel Visibility="{Binding ProfileVisibility, Converter={StaticResource BTVConverter}}">
+                    <TextBlock Text="{DynamicResource Profile}" FontSize="22" FontWeight="Bold"/>
+                    <Border Grid.Column="0" Grid.Row="1" BorderBrush="Gray" BorderThickness="2" Height="Auto" VerticalAlignment="Top"
+                                CornerRadius="30" Padding="30" Margin="0 20 0 0">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <StackPanel Grid.Column="0" Grid.RowSpan="2" VerticalAlignment="Center">
+                                <Grid>
+
+                                    <Border Background="LightGray" BorderThickness="2" BorderBrush="Gray" 
+                                Width="150" Height="150" CornerRadius="100" Margin="0 0 0 0" >
+                                        <ContentControl>
+                                            <ContentControl.Content>
+                                                <MultiBinding Converter="{StaticResource ITTConverter}">
+                                                    <Binding Path="SourceImage" />
+                                                    <Binding Path="UserName"/>
+                                                    <Binding Path="Width" RelativeSource="{RelativeSource AncestorType=Border}" />
+                                                    <Binding Path="BorderThickness" RelativeSource="{RelativeSource AncestorType=Border}" />
+                                                </MultiBinding>
+                                            </ContentControl.Content>
+                                        </ContentControl>
+                                    </Border>
+                                    <Button Content="{materialDesign:PackIcon Kind=Pencil, Size=20}" 
+                                            HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,10,65,0"
+                                            Command="{Binding ChangeImageCommand}"
+                                            Visibility="{Binding EditUserVisibility, Converter={StaticResource BTVConverter}}"/>
+                                </Grid>
+                                <TextBlock Text="{Binding UserName}" Visibility="{Binding EditUserVisibility, Converter={StaticResource nBTVConverter}}" TextAlignment="Center" FontSize="18" FontWeight="DemiBold" Margin="0 20 0 0"/>
+                                <TextBox Visibility="{Binding EditUserVisibility, Converter={StaticResource BTVConverter}}" Text="{Binding UserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Center" FontSize="18" FontWeight="DemiBold" Margin="0 19 0 0"/>
+                                <Button Content="Изменить профиль" FontSize="14" Padding="10" Width="250" Margin="0 30 0 0" Command="{Binding EditUserCommand}" Visibility="{Binding EditUserVisibility, Converter={StaticResource nBTVConverter}}"/>
+                                <Button Content="{DynamicResource Confirm}" FontSize="14" Padding="10" Width="250" Margin="0 30 0 0" Command="{Binding ConfirmEditUserCommand}" Visibility="{Binding EditUserVisibility, Converter={StaticResource BTVConverter}}"/>
+                            </StackPanel>
+                            <Button 
+                                Content="{materialDesign:PackIcon Kind=Close, Size=15}" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Top" 
+                                    FontSize="14" Command="{Binding CloseEditUserCommand}" Visibility="{Binding EditUserVisibility, Converter={StaticResource BTVConverter}}"/>
+                            <StackPanel Grid.Column="1" Margin="60 0 0 0">
+                                <TextBlock Text="{DynamicResource FirstName}" Style="{StaticResource UserCharacter}"/>
+                                <TextBlock Text="{DynamicResource LastName}" Style="{StaticResource UserCharacter}"/>
+                                <TextBlock Text="{DynamicResource MiddleName}" Style="{StaticResource UserCharacter}"/>
+                                <TextBlock Text="{DynamicResource Address}" Style="{StaticResource UserCharacter}"/>
+                                <TextBlock Text="{DynamicResource Email}" Style="{StaticResource UserCharacter}"/>
+                                <TextBlock Text="{DynamicResource Phone}" Style="{StaticResource UserCharacter}"/>
+                                <TextBlock Text="{DynamicResource RegistrationDate}" Style="{StaticResource UserCharacter}"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2" Margin="0 0 30 0">
+                                <TextBlock Visibility="{Binding EditUserVisibility, Converter={StaticResource nBTVConverter}}" Text="{Binding FirstName}" Style="{StaticResource UserCharacterValue}"/>
+                                <TextBlock Visibility="{Binding EditUserVisibility, Converter={StaticResource nBTVConverter}}" Text="{Binding LastName}" Style="{StaticResource UserCharacterValue}"/>
+                                <TextBlock Visibility="{Binding EditUserVisibility, Converter={StaticResource nBTVConverter}}" Text="{Binding FatherName}" Style="{StaticResource UserCharacterValue}"/>
+                                <TextBlock Visibility="{Binding EditUserVisibility, Converter={StaticResource nBTVConverter}}" Text="{Binding Address}" Style="{StaticResource UserCharacterValue}"/>
+                                <TextBlock Visibility="{Binding EditUserVisibility, Converter={StaticResource nBTVConverter}}" Text="{Binding Email}" Style="{StaticResource UserCharacterValue}"/>
+                                <TextBlock Visibility="{Binding EditUserVisibility, Converter={StaticResource nBTVConverter}}" Text="{Binding Phone}" Style="{StaticResource UserCharacterValue}"/>
+                                <TextBlock Visibility="{Binding EditUserVisibility, Converter={StaticResource nBTVConverter}}" Text="{Binding RegistrationDate}" Style="{StaticResource UserCharacterValue}"/>
+                                <TextBox Visibility="{Binding EditUserVisibility, Converter={StaticResource BTVConverter}}" Text="{Binding FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource UserCharacterValueBox}"/>
+                                <TextBox Visibility="{Binding EditUserVisibility, Converter={StaticResource BTVConverter}}" Text="{Binding LastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource UserCharacterValueBox}"/>
+                                <TextBox Visibility="{Binding EditUserVisibility, Converter={StaticResource BTVConverter}}" Text="{Binding FatherName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource UserCharacterValueBox}"/>
+                                <TextBox Visibility="{Binding EditUserVisibility, Converter={StaticResource BTVConverter}}" Text="{Binding Address, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource UserCharacterValueBox}"/>
+                                <TextBox Visibility="{Binding EditUserVisibility, Converter={StaticResource BTVConverter}}" Text="{Binding Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource UserCharacterValueBox}"/>
+                                <TextBox Visibility="{Binding EditUserVisibility, Converter={StaticResource BTVConverter}}" Text="{Binding Phone, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource UserCharacterValueBox}"/>
+                                <TextBlock Visibility="{Binding EditUserVisibility, Converter={StaticResource BTVConverter}}" Text="{Binding RegistrationDate}" Style="{StaticResource UserCharacterValue}"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Margin="20 20 0 0">
+                                <TextBlock Text="{DynamicResource ThemeAndLanguageSettings}" FontSize="18" FontWeight="Bold"/>
+                                <StackPanel Orientation="Horizontal" Margin="10">
+                                    <TextBlock Text="{DynamicResource ThemeColor}" FontSize="14"/>
+                                    <ComboBox Margin="15 0 50 0" ItemsSource="{Binding Themes}" SelectedIndex="{Binding SelectTheme, Mode=TwoWay}" Width="100"/>
+                                    <TextBlock Text="{DynamicResource Languages}" FontSize="14"/>
+                                    <ComboBox Margin="15 0 50 0" ItemsSource="{Binding Language}" SelectedIndex="{Binding SelectLanguage, Mode=TwoWay}" Width="100"/>
+                                    <TextBlock Text="{DynamicResource ThemeMode}" FontSize="14"/>
+                                    <ComboBox Margin="15 0 50 0" ItemsSource="{Binding Mode}" SelectedIndex="{Binding SelectMode, Mode=TwoWay}" Width="100"/>   
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Margin="10">
+                                    <TextBlock Text="{DynamicResource NotifyMode}" FontSize="14"/>
+                                    <ComboBox Margin="15 0 50 0" ItemsSource="{Binding NotifyMode}" IsEnabled="{Binding EnabledNotifyMode}"
+                                              SelectedIndex="{Binding SelectNotifyMode, Mode=TwoWay}" Width="100"/>
+                                </StackPanel>
+                                <Button Content="{DynamicResource Confirm}" Command="{Binding ConfirmSettingCommand}" Padding="10 2" HorizontalAlignment="Center" Margin="10"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+                <StackPanel Visibility="{Binding LibraryVisibility, Converter={StaticResource BTVConverter}}">
+                    <TextBlock Text="{DynamicResource PersonalLibrary}" FontSize="22" FontWeight="Bold"/>
+                    <TabControl ItemsSource="{Binding Library}"
+                                ItemTemplateSelector="{StaticResource TemplateTabItemSelector}"
+                                ContentTemplate="{StaticResource CollectionTemplate}">
+                    </TabControl>
+                </StackPanel>
+                <StackPanel Visibility="{Binding CartVisibility, Converter={StaticResource BTVConverter}}">
+                    <TextBlock Text="{DynamicResource Cart}" FontSize="22" FontWeight="Bold"/>
+                    <ItemsControl ItemsSource="{Binding Basket, Mode=TwoWay, UpdateSourceTrigger=Explicit}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button local:AttachedProperties.Name="{Binding Id, StringFormat='btn{0}'}">
+                                    <StackPanel Margin="6">
+                                        <Grid>
+                                            <Image Source="{Binding Image}" Stretch="UniformToFill" Width="160"/>
+                                            <Button Panel.ZIndex="10" HorizontalAlignment="Left" VerticalAlignment="Top" Width="25" Height="25"
+                                                    Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}, Path=DataContext.DeleteInBasketCommand}"
+                                                    CommandParameter="{Binding Name, RelativeSource={RelativeSource AncestorType=Button}}">
+                                                <Button.Content>
+                                                    <materialDesign:PackIcon Kind="Minus"/>
+                                                </Button.Content>
+                                            </Button>
+                                        </Grid>
+                                        <TextBlock Text="{Binding Name}"/>
+                                        <TextBlock Text="{Binding Author}"/>
+                                    </StackPanel>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel x:Name="products"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                    <Button Content="Заказать" HorizontalAlignment="Center" Margin="50" FontSize="16" Padding="20 5" Command="{Binding OrderProductCommand}"/>
+                </StackPanel>
+                <StackPanel Visibility="{Binding HistoryOrderVisibility, Converter={StaticResource BTVConverter}}">
+                    <TextBlock Text="{DynamicResource OrderHistory}" FontSize="22" FontWeight="Bold"/>
+                    <Grid Margin="0 10 0 0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="1.2*"/>
+                            <ColumnDefinition Width="1.5*"/>
+                            <ColumnDefinition Width="1.5*"/>
+                            <ColumnDefinition Width="1.5*"/>
+                            <ColumnDefinition Width="1.5*"/>
+                            <ColumnDefinition Width="200"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="2"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="№ заказа" Grid.Column="0" TextAlignment="Center" FontSize="16" VerticalAlignment="Center"/>
+                        <TextBlock Text="Кол-во" Grid.Column="1" TextAlignment="Center" FontSize="16" VerticalAlignment="Center"/>
+                        <TextBlock Text="Дата" Grid.Column="2" TextAlignment="Center" FontSize="16" VerticalAlignment="Center"/>
+                        <TextBlock Text="Срок" Grid.Column="3" TextAlignment="Center" FontSize="16" VerticalAlignment="Center"/>
+                        <TextBlock Text="Статус" Grid.Column="4" TextAlignment="Center" FontSize="16" VerticalAlignment="Center"/>
+                        <TextBlock Text="Состояние" Grid.Column="5" TextAlignment="Center" FontSize="16" VerticalAlignment="Center"/>
+                        <Rectangle Grid.ColumnSpan="7" Grid.Row="1" Fill="Black"/>
+                    </Grid>
+                    <DataGrid GridLinesVisibility="None" HeadersVisibility="None" IsReadOnly="True"
+                              AutoGenerateColumns="False" ItemsSource="{Binding Orders}" CanUserAddRows="false"
+                              RowBackground="Transparent" AlternatingRowBackground="#FFEBEBEB" BorderBrush="Transparent" Background="#00F0F0F0" RowHeight="50">
+                        <DataGrid.CellStyle>
+                            <Style TargetType="{x:Type DataGridCell}">
+                                <Setter Property="TextBlock.TextAlignment" Value="Center" />
+                                <Setter Property="TextBlock.FontSize" Value="16" />
+                                <Setter Property="VerticalAlignment" Value="Center" />
+                                <Setter Property="HorizontalAlignment" Value="Center" />
+                            </Style>
+                        </DataGrid.CellStyle>
+                        
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Id}" Width="2*"/>
+                            <DataGridTextColumn Binding="{Binding Count}" Width="1.2*" />
+                            <DataGridTextColumn Binding="{Binding DateOrder}" Width="1.5*" />
+                            <DataGridTextColumn Binding="{Binding DateEnd}" Width="1.5*" />
+                            <DataGridTextColumn Binding="{Binding CurrentOrderStatusDescription}" Width="1.5*" />
+                            <DataGridTextColumn Binding="{Binding IsActiv}" Width="1.5*" />
+                            <DataGridTemplateColumn Width="200">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Content="Детали заказа" Padding="10 5"
+                                                local:AttachedProperties.Name="{Binding Id, StringFormat='order{0}'}"
+                                                Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=DataContext.OpenDetailsOrderCommand}"
+                                                CommandParameter="{Binding Name, RelativeSource={RelativeSource Self}}"
+                                                />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                        <DataGrid.RowDetailsTemplate>
+                            <DataTemplate>
+                                <ItemsControl ItemsSource="{Binding ProductItem}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BorderBrush="LightGray" BorderThickness="0 2 0 2"  Margin="0 -2 0 0" Padding="20">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="80"/>
+                                                        <ColumnDefinition/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition/>
+                                                    </Grid.RowDefinitions>
+                                                    <Image Source="{Binding Image}" Grid.Column="0" Grid.RowSpan="3"/>
+                                                    <StackPanel Grid.Column="1" Grid.Row="0" Margin="10 0 0 0">
+                                                        <TextBlock Text="{Binding Name}" FontSize="20" FontWeight="DemiBold"/>
+                                                        <TextBlock Text="{Binding Author}" FontSize="18"/>
+                                                        <StackPanel Orientation="Horizontal" >
+                                                            <Path
+                                                                   Data="M19.8488 6.5967C19.8076 6.4405 19.7252 6.3169 19.6015 6.2258 19.4779 6.1348 19.3267 6.0632 19.1481 6.0111L13.5219 5.2695 10.9663.4489C10.8427.1496 10.5816 0 10.1832 0 9.7848 0 9.5237.1496 9.4001.4489L6.8445 5.1914 1.3007 6.0111C1.1221 6.0111.9676 6.0697.837 6.1868.7065 6.3039.6 6.4405.5176 6.5967.4626 6.7658.4592 6.9284.5073 7.0846.5554 7.2407.6413 7.3578.7649 7.4359L4.8249 11.1831 3.8563 16.5112C3.815 16.6803 3.8288 16.8397 3.8975 16.9893 3.9662 17.1389 4.0692 17.2593 4.2066 17.3504 4.3303 17.4284 4.478 17.4805 4.6497 17.5065 4.8214 17.5325 4.9966 17.5065 5.1752 17.4284L10.1832 14.9303 15.1912 17.4284C15.2874 17.4284 15.3629 17.4284 15.4179 17.4284 15.4728 17.4284 15.5484 17.4284 15.6446 17.4284 15.727 17.4284 15.8129 17.4122 15.9022 17.3796 15.9915 17.3471 16.0774 17.3048 16.1598 17.2528 16.2972 17.1747 16.4002 17.0609 16.4689 16.9112 16.5376 16.7616 16.5514 16.6022 16.5102 16.4331L15.5415 11.105 19.6015 7.3578C19.7252 7.2667 19.811 7.1496 19.8591 7.0065 19.9072 6.8634 19.9038 6.7268 19.8488 6.5967Z" 
+                                                                   Fill="Yellow" Stroke="Gray" HorizontalAlignment="Left" 
+                                                                   StrokeThickness="1" Stretch="UniformToFill" Width="24" Margin="0 10 10 10"/>
+                                                            <TextBlock Text="{Binding Rating}" VerticalAlignment="Center" FontSize="14" FontWeight="DemiBold"/>
+                                                        </StackPanel>
+                                                    </StackPanel>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </DataTemplate>
+                        </DataGrid.RowDetailsTemplate>
+                    </DataGrid>
+                </StackPanel>
+                <StackPanel Grid.Row="1" Margin="0 40 0 0" Visibility="{Binding DetailsOrderVisibility, Converter={StaticResource BTVConverter}}">
+                    
+                   
+                </StackPanel>
+                
+            </Grid>
+        </ScrollViewer>
+
+    </Grid>
+</Page>
